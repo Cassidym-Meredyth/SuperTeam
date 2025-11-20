@@ -11,7 +11,15 @@ from src.visualization.map_plotter import plot_route_on_map, export_route_to_for
 
 # Координаты портов
 START_PORT = (69.04, 33.05)  # Мурманск
-END_PORT = (69.30, 36.50)  # Вход в Кольский залив (район Островного)
+END_PORT = (64.55, 40.49)  # Вход в Кольский залив (район Островного)
+
+MIN_LAT, MAX_LAT = 63.0, 71.0
+MIN_LON, MAX_LON = 31.0, 44.0
+
+lats = np.linspace(MIN_LAT, MAX_LAT, 400)  # можно 250, но 400 будет плавнее
+lons = np.linspace(MIN_LON, MAX_LON, 400)
+
+land_mask = create_land_sea_mask(lats, lons)
 
 # Параметры судна
 ship_params = {
@@ -28,8 +36,6 @@ def main():
 
     # Создание сетки координат
     print("Создание сетки координат...")
-    lats = np.linspace(68.0, 70.5, 250)
-    lons = np.linspace(31.5, 38.0, 250)
 
     # Создание маски суша/море
     print("\nСоздание маски суша/море...")
@@ -51,7 +57,9 @@ def main():
         ice_data=ice_data,
         ship_params=ship_params,
         land_mask=land_mask,
-        resolution=0.1
+        resolution=0.1,
+        lats=lats,
+        lons=lons
     )
 
     if route:
