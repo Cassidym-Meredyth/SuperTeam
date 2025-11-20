@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_c2805556c8ccf50eb0324d8572e2b461 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ardhi/Leaflet.MousePosition/src/L.Control.MousePosition.min.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_c2805556c8ccf50eb0324d8572e2b461" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_c2805556c8ccf50eb0324d8572e2b461 = L.map(
+                "map_c2805556c8ccf50eb0324d8572e2b461",
+                {
+                    center: [69.17, 34.775],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0fd9e84b26dccb3d96f69ea132cd709b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_0fd9e84b26dccb3d96f69ea132cd709b.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var tile_layer_59b75429f6ca2643b69b2b75b5345a5b = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_59b75429f6ca2643b69b2b75b5345a5b.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var tile_layer_43c789c7ebe5560d41c6e1be7777a71b = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_43c789c7ebe5560d41c6e1be7777a71b.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var tile_layer_7281b0de97b8a3a31964c506d4a2a6e2 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7281b0de97b8a3a31964c506d4a2a6e2.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var feature_group_1d704e43eb049bb5f7005ad62f73862b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_8d04f6f8152186f54872360f8578c9cf = L.polyline(
+                [[69.04, 33.05], [69.3, 36.5]],
+                {"bubblingMouseEvents": true, "color": "#0066FF", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#0066FF", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_1d704e43eb049bb5f7005ad62f73862b);
+        
+    
+        var popup_36d0175277994263d50740c8f0d93439 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a5d8c5b4e68b17890f12234152fd78f1 = $(`<div id="html_a5d8c5b4e68b17890f12234152fd78f1" style="width: 100.0%; height: 100.0%;"><b>Оптимальный морской маршрут</b><br>Мурманск → Архангельск</div>`)[0];
+                popup_36d0175277994263d50740c8f0d93439.setContent(html_a5d8c5b4e68b17890f12234152fd78f1);
+            
+        
+
+        poly_line_8d04f6f8152186f54872360f8578c9cf.bindPopup(popup_36d0175277994263d50740c8f0d93439)
+        ;
+
+        
+    
+    
+            poly_line_8d04f6f8152186f54872360f8578c9cf.bindTooltip(
+                `<div>
+                     Маршрут корабля
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_1d704e43eb049bb5f7005ad62f73862b.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var feature_group_1ccefb7d40b4d42dd59e5c3d366fc87a = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_490babb54e8db726f71479da464af9c3 = L.marker(
+                [69.04, 33.05],
+                {
+}
+            ).addTo(feature_group_1ccefb7d40b4d42dd59e5c3d366fc87a);
+        
+    
+            var icon_0f3dc07b4e2f79e7ffff82a177879c29 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "anchor",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cd42974514480ad8c1978a59e24cc577 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bbe77389e893cefec2391398f4f9dabe = $(`<div id="html_bbe77389e893cefec2391398f4f9dabe" style="width: 100.0%; height: 100.0%;"><b>🚢 Порт Мурманск</b><br>                   <b>Старт маршрута</b><br>                   Координаты: 69.0400°N, 33.0500°E</div>`)[0];
+                popup_cd42974514480ad8c1978a59e24cc577.setContent(html_bbe77389e893cefec2391398f4f9dabe);
+            
+        
+
+        marker_490babb54e8db726f71479da464af9c3.bindPopup(popup_cd42974514480ad8c1978a59e24cc577)
+        ;
+
+        
+    
+    
+            marker_490babb54e8db726f71479da464af9c3.bindTooltip(
+                `<div>
+                     Мурманск (Старт)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_490babb54e8db726f71479da464af9c3.setIcon(icon_0f3dc07b4e2f79e7ffff82a177879c29);
+            
+    
+            var marker_ba9a3f1301f3ce55a2fc3fc0cfa03c22 = L.marker(
+                [69.3, 36.5],
+                {
+}
+            ).addTo(feature_group_1ccefb7d40b4d42dd59e5c3d366fc87a);
+        
+    
+            var icon_1e81db32fdbc7181b4eac0ac498bb99a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "anchor",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2c3babc0a39a1879a46f05475385de17 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e5c422fe88400efacf35ee181626ca20 = $(`<div id="html_e5c422fe88400efacf35ee181626ca20" style="width: 100.0%; height: 100.0%;"><b>🚢 Порт Архангельск</b><br>                   <b>Финиш маршрута</b><br>                   Координаты: 69.3000°N, 36.5000°E</div>`)[0];
+                popup_2c3babc0a39a1879a46f05475385de17.setContent(html_e5c422fe88400efacf35ee181626ca20);
+            
+        
+
+        marker_ba9a3f1301f3ce55a2fc3fc0cfa03c22.bindPopup(popup_2c3babc0a39a1879a46f05475385de17)
+        ;
+
+        
+    
+    
+            marker_ba9a3f1301f3ce55a2fc3fc0cfa03c22.bindTooltip(
+                `<div>
+                     Архангельск (Финиш)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ba9a3f1301f3ce55a2fc3fc0cfa03c22.setIcon(icon_1e81db32fdbc7181b4eac0ac498bb99a);
+            
+    
+            feature_group_1ccefb7d40b4d42dd59e5c3d366fc87a.addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var feature_group_389a764d34a077b99b5e16c17280c022 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_93e32858b4d32da1e99a58f5852a58db = L.circleMarker(
+                [69.04, 33.05],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "lightblue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(feature_group_389a764d34a077b99b5e16c17280c022);
+        
+    
+        var popup_85ced1ba56c88777d3b6abfceb2c11d7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5510c27130e8547baf6599a6788c55e1 = $(`<div id="html_5510c27130e8547baf6599a6788c55e1" style="width: 100.0%; height: 100.0%;"><b>Баренцево море</b><br>69.0400°N, 33.0500°E</div>`)[0];
+                popup_85ced1ba56c88777d3b6abfceb2c11d7.setContent(html_5510c27130e8547baf6599a6788c55e1);
+            
+        
+
+        circle_marker_93e32858b4d32da1e99a58f5852a58db.bindPopup(popup_85ced1ba56c88777d3b6abfceb2c11d7)
+        ;
+
+        
+    
+    
+            circle_marker_93e32858b4d32da1e99a58f5852a58db.bindTooltip(
+                `<div>
+                     Баренцево море
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cd6f883583fa44f6cc8197ca332a841f = L.circleMarker(
+                [69.3, 36.5],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "lightblue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(feature_group_389a764d34a077b99b5e16c17280c022);
+        
+    
+        var popup_479d48628e6e2ff9eadbfcb4a816cc9c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_491434bbdcdbd7a19c36026eda40e886 = $(`<div id="html_491434bbdcdbd7a19c36026eda40e886" style="width: 100.0%; height: 100.0%;"><b>Горло Белого моря</b><br>69.3000°N, 36.5000°E</div>`)[0];
+                popup_479d48628e6e2ff9eadbfcb4a816cc9c.setContent(html_491434bbdcdbd7a19c36026eda40e886);
+            
+        
+
+        circle_marker_cd6f883583fa44f6cc8197ca332a841f.bindPopup(popup_479d48628e6e2ff9eadbfcb4a816cc9c)
+        ;
+
+        
+    
+    
+            circle_marker_cd6f883583fa44f6cc8197ca332a841f.bindTooltip(
+                `<div>
+                     Горло Белого моря
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_239070889ab460f77d7f92014544df16 = L.circleMarker(
+                [69.3, 36.5],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "lightblue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(feature_group_389a764d34a077b99b5e16c17280c022);
+        
+    
+        var popup_4769f07d5b241abe797b341d129c215d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2f041d5fd6dabb30d4108267820e25f1 = $(`<div id="html_2f041d5fd6dabb30d4108267820e25f1" style="width: 100.0%; height: 100.0%;"><b>Белое море</b><br>69.3000°N, 36.5000°E</div>`)[0];
+                popup_4769f07d5b241abe797b341d129c215d.setContent(html_2f041d5fd6dabb30d4108267820e25f1);
+            
+        
+
+        circle_marker_239070889ab460f77d7f92014544df16.bindPopup(popup_4769f07d5b241abe797b341d129c215d)
+        ;
+
+        
+    
+    
+            circle_marker_239070889ab460f77d7f92014544df16.bindTooltip(
+                `<div>
+                     Белое море
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var layer_control_bd5c55272cbf01dffb4bda513e768f60_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_0fd9e84b26dccb3d96f69ea132cd709b,
+                    "\u0421\u0432\u0435\u0442\u043b\u0430\u044f \u043a\u0430\u0440\u0442\u0430" : tile_layer_59b75429f6ca2643b69b2b75b5345a5b,
+                    "\u0422\u0435\u043c\u043d\u0430\u044f \u043a\u0430\u0440\u0442\u0430" : tile_layer_43c789c7ebe5560d41c6e1be7777a71b,
+                    "\u0421\u043f\u0443\u0442\u043d\u0438\u043a" : tile_layer_7281b0de97b8a3a31964c506d4a2a6e2,
+                },
+                overlays :  {
+                    "\ud83d\udea2 \u041c\u0430\u0440\u0448\u0440\u0443\u0442 \u043a\u043e\u0440\u0430\u0431\u043b\u044f" : feature_group_1d704e43eb049bb5f7005ad62f73862b,
+                    "\u2693 \u041f\u043e\u0440\u0442\u044b" : feature_group_1ccefb7d40b4d42dd59e5c3d366fc87a,
+                    "\ud83d\udccd \u041a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u0442\u043e\u0447\u043a\u0438" : feature_group_389a764d34a077b99b5e16c17280c022,
+                },
+            };
+            let layer_control_bd5c55272cbf01dffb4bda513e768f60 = L.control.layers(
+                layer_control_bd5c55272cbf01dffb4bda513e768f60_layers.base_layers,
+                layer_control_bd5c55272cbf01dffb4bda513e768f60_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+
+        
+    
+            var measure_control_adbcbda6722ef378b519898e007bbcf4 = new L.Control.Measure(
+                {
+  "position": "topleft",
+  "primaryLengthUnit": "kilometers",
+  "secondaryLengthUnit": "miles",
+  "primaryAreaUnit": "sqkilometers",
+  "secondaryAreaUnit": "acres",
+});
+            map_c2805556c8ccf50eb0324d8572e2b461.addControl(measure_control_adbcbda6722ef378b519898e007bbcf4);
+
+            // Workaround for using this plugin with Leaflet>=1.8.0
+            // https://github.com/ljagis/leaflet-measure/issues/171
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    // disable autopan
+                    this._captureMarker.options.autoPanOnFocus = false;
+                    // default function
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topright",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_c2805556c8ccf50eb0324d8572e2b461);
+        
+    
+            var mouse_position_ad9118ddea8eb516e12cfa781cc40be8 = new L.Control.MousePosition(
+                {
+  "position": "bottomleft",
+  "separator": " | ",
+  "emptyString": "Unavailable",
+  "lngFirst": false,
+  "numDigits": 5,
+  "prefix": "\u041a\u043e\u043e\u0440\u0434\u0438\u043d\u0430\u0442\u044b:",
+}
+            );
+            mouse_position_ad9118ddea8eb516e12cfa781cc40be8.options["latFormatter"] =
+                function(num) {return L.Util.formatNum(num, 4) + '°N';};
+            mouse_position_ad9118ddea8eb516e12cfa781cc40be8.options["lngFormatter"] =
+                function(num) {return L.Util.formatNum(num, 4) + '°E';};
+            map_c2805556c8ccf50eb0324d8572e2b461.addControl(mouse_position_ad9118ddea8eb516e12cfa781cc40be8);
+        
+</script>
+</html>
