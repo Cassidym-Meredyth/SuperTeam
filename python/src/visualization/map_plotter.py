@@ -5,6 +5,18 @@ from pathlib import Path
 import numpy as np
 
 
+SMP_PORTS = [
+    (69.04, 33.05, "Мурманск"),
+    (64.53, 40.52, "Архангельск"),
+    (71.636643, 128.859950, "Тикси"),
+    (73.505396, 80.503602, "Диксон"),
+    (69.400861, 86.165845, "Дудинка"),
+    (69.703473, 170.264721, "Певек"),
+    (71.278860, 72.056409, "Сабетта"),
+    (53.005735, 158.657452, "Петропавловск-Камчатский"),
+    (53.005735, 158.657452, "Владивосток"),
+]
+
 def plot_route_on_map(route: List[Tuple[float, float]],
                       start_port: Tuple[float, float],
                       end_port: Tuple[float, float],
@@ -50,6 +62,19 @@ def plot_route_on_map(route: List[Tuple[float, float]],
         overlay=False,
         control=True
     ).add_to(m)
+
+    smp_ports_layer = folium.FeatureGroup(name='⚓ Порты Севморпути', show=True)
+
+    for lat, lon, name in SMP_PORTS:
+        folium.Marker(
+            location=[lat, lon],
+            popup=f'''<b>🚢 Порт СМП: {name}</b><br>
+                      Координаты: {lat:.4f}°N, {lon:.4f}°E''',
+            tooltip=name,
+            icon=folium.Icon(color='blue', icon='ship', prefix='fa')
+        ).add_to(smp_ports_layer)
+
+    smp_ports_layer.add_to(m)
 
     # === ВИЗУАЛИЗАЦИЯ ЗАПРЕТНЫХ ЗОН (СУША) ===
     if land_mask is not None and lats is not None and lons is not None:

@@ -1,7 +1,7 @@
 """
 A* алгоритм маршрутизации, использует маску суши/моря
 """
-
+from src.routing.cost_function import calculate_edge_cost_with_static_ice
 from typing import Tuple, List, Dict
 import numpy as np
 import heapq
@@ -76,7 +76,15 @@ def a_star_route_planning(start_coord, end_coord, ice_data, ship_params, land_ma
                 continue
 
             # Стоимость хода
-            tentative_g = g_score[(current_i, current_j)] + np.sqrt(di ** 2 + dj ** 2)
+            tentative_g = g_score[(current_i, current_j)] + calculate_edge_cost_with_static_ice(
+                current=(current_i, current_j),
+                neighbor=(ni, nj),
+                lats=lats,
+                lons=lons,
+                ice_data=ice_data,
+                ship_params=ship_params,
+                land_mask=land_mask
+            )
 
             if (ni, nj) not in g_score or tentative_g < g_score[(ni, nj)]:
                 came_from[(ni, nj)] = (current_i, current_j)
