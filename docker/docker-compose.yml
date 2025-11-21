@@ -1,0 +1,16 @@
+services:
+  python-script:
+    build:
+      context: ../
+      dockerfile: docker/python/Dockerfile
+    volumes:
+      - ../python/output:/app/output/
+  
+  nginx:
+    build:
+      context: ../
+      dockerfile: docker/nginx/Dockerfile
+    volumes:
+      - ../python/output:/usr/share/nginx/html
+    ports:
+      - "8080:80"

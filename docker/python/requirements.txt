@@ -1,0 +1,6 @@
+numpy
+shapely
+rasterio
+folium
+requests
+pandas
