@@ -1,29 +1,57 @@
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+
 import numpy as np
+import json
+from shapely.geometry import Polygon, Point
 from src.preprocessing.land_sea_mask import create_land_sea_mask
 from src.routing.astar import a_star_route_planning
 from src.utils.geo_utils import haversine_distance
 from src.visualization.map_plotter import plot_route_on_map, export_route_to_formats
 
-import json
-from shapely.geometry import Polygon, Point
-
-# Координаты портов (корректные!)
-START_PORT = (69.04, 33.05)         # Мурманск
-WAYPOINT_PORT = (64.8, 39.8)        # Архангельск
-END_PORT = (69.4112, 65.6104)       # Баренцево море
+# Координаты портов (общие для всех сценариев)
+START_PORT = (69.04, 33.05)        # Мурманск
+END_PORT = (71.3219, 72.29)        # Сабетта
 
 # Окно координат
-MIN_LAT, MAX_LAT = 62.0, 73.0
-MIN_LON, MAX_LON = 28.0, 70.0
-
+MIN_LAT, MAX_LAT = 62.0, 78.0
+MIN_LON, MAX_LON = 28.0, 80.0
 lats = np.linspace(MIN_LAT, MAX_LAT, 1000)
 lons = np.linspace(MIN_LON, MAX_LON, 1200)
 
-# Функция поиска ближайшей морской точки
+# Промежуточные точки для каждого месяца/ограничения
+month_scenarios = {
+    'nov': {
+        'mask_file': '../config/novice.geojson',
+        'waypoints': [
+            (64.8, 39.8),          # Архангельск
+            (70.9, 56.8),
+            (72.0, 68.1)
+        ],
+    },
+    'march': {
+        'mask_file': '../config/march.geojson',
+        'waypoints': [
+            (65.2, 40.1),          # Смещённая точка (лед ушёл к востоку)
+            (73, 51),
+            (77.27, 66.35),
+            (77.5, 70.66)
+        ],
+    },
+    'july': {
+        'mask_file': '../config/july.geojson',
+        'waypoints': [
+            (65.0, 39.9),
+            (70.8, 62.8),
+            (72.3, 69.2)
+        ],
+    },
+    # Расширяй при необходимости
+}
+
 def nearest_sea_point(lat, lon, lats, lons, land_mask):
     min_dist = float('inf')
     best = None
@@ -36,7 +64,6 @@ def nearest_sea_point(lat, lon, lats, lons, land_mask):
                     best = (lats[i], lons[j])
     return best
 
-# Новый --- ЗАГРУЗКА ОГРАНИЧЕННЫХ ЗОН --- (например, ледовые полигоны)
 def load_restriction_mask(json_file, lats, lons):
     with open(json_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -44,7 +71,7 @@ def load_restriction_mask(json_file, lats, lons):
     mask = np.zeros((len(lats), len(lons)), dtype=bool)
     for i, lat in enumerate(lats):
         for j, lon in enumerate(lons):
-            pt = Point(lon, lat)   # geojson: (lon, lat)
+            pt = Point(lon, lat)
             if any(poly.contains(pt) for poly in polygons):
                 mask[i, j] = True
     return mask
@@ -58,89 +85,81 @@ ship_params = {
 }
 
 def main():
-    print("=== Система оптимизации маршрута: Мурманск → Архангельск → точка на море ===\n")
-    print("Создание сетки координат...")
-
+    print("=== Система оптимизации морского маршрута по месяцам ===\n")
     land_mask = create_land_sea_mask(lats, lons)
-    print(f"Маска суши/море: {land_mask.shape} | Суша: {land_mask.sum()} | Вода: {(~land_mask).sum()}")
 
-    # Загрузка доп. ограниченных зон (например, ледовые поля/запретные зоны)
-    ICE_RESTRICTION_FILE = '../config/iceice.json'
-    restriction_mask = load_restriction_mask(ICE_RESTRICTION_FILE, lats, lons)
-    print(f"Ограниченных зон: {restriction_mask.sum()} (True = запрет прохода)")
+    for month, config in month_scenarios.items():
+        print(f"--- Маршрут для месяца: {month.upper()} ---")
+        restriction_mask = load_restriction_mask(config['mask_file'], lats, lons)
+        print(f"Ограниченные зоны: {restriction_mask.sum()} (True = запрет прохода)")
+        ice_data = {}
 
-    ice_data = {}
+        # Формируем список навигационных точек в нужном порядке
+        raw_points = [START_PORT] + config['waypoints'] + [END_PORT]
+        points = [nearest_sea_point(*pt, lats, lons, land_mask) for pt in raw_points]
+        print("Маршрутные морские точки:")
+        for idx, pt in enumerate(points):
+            print(f"  {idx+1}. {pt}")
 
-    # Найти ближайшие морские точки для каждой
-    true_start = nearest_sea_point(*START_PORT, lats, lons, land_mask)
-    true_waypoint = nearest_sea_point(*WAYPOINT_PORT, lats, lons, land_mask)
-    true_end = nearest_sea_point(*END_PORT, lats, lons, land_mask)
-    print(f"Старт по морю: {true_start}")
-    print(f"Архангельск по морю: {true_waypoint}")
-    print(f"Финиш по морю: {true_end}")
+        # Построить маршрут по сегментам
+        route_full = []
+        for i in range(len(points) - 1):
+            segment = a_star_route_planning(
+                start_coord=points[i],
+                end_coord=points[i + 1],
+                ice_data=ice_data,
+                ship_params=ship_params,
+                land_mask=(land_mask | restriction_mask),
+                resolution=0.05,
+                lats=lats,
+                lons=lons
+            )
+            if segment and len(segment) > 1:
+                if i > 0:
+                    segment = segment[1:]
+                route_full += segment
 
-    # Построить маршрут по двум сегментам
-    points = [true_start, true_waypoint, true_end]
-    route_full = []
-    for i in range(len(points) - 1):
-        segment = a_star_route_planning(
-            start_coord=points[i],
-            end_coord=points[i + 1],
-            ice_data=ice_data,
-            ship_params=ship_params,
-            land_mask=(land_mask | restriction_mask),
-            resolution=0.05,
-            lats=lats,
-            lons=lons
-        )
-        if segment and len(segment) > 1:
-            if i > 0:
-                segment = segment[1:]
-            route_full += segment
+        if route_full and len(route_full) > 2:
+            print(f"\n✓ Маршрут найден за {month}! Кол-во точек: {len(route_full)}")
+            print(f"  Начало: {route_full[0]}")
+            print(f"  Конец: {route_full[-1]}")
 
-    if route_full and len(route_full) > 2:
-        print(f"\n✓ Маршрут найден!")
-        print(f"  Количество точек маршрута: {len(route_full)}")
-        print(f"  Начало: {route_full[0]}")
-        print(f"  Конец: {route_full[-1]}")
+            total_distance = sum(
+                haversine_distance(route_full[i], route_full[i + 1])
+                for i in range(len(route_full) - 1)
+            )
+            print(f"  Длина маршрута: {total_distance:.2f} км")
+            avg_speed = ship_params['open_water_speed']
+            time_hours = total_distance / (avg_speed * 1.852)
+            print(f"  Время в пути: {time_hours:.1f} часов ({time_hours / 24:.1f} дней)")
 
-        total_distance = sum(
-            haversine_distance(route_full[i], route_full[i + 1])
-            for i in range(len(route_full) - 1)
-        )
-        print(f"  Длина маршрута: {total_distance:.2f} км")
+            output_dir = Path(__file__).parent.parent / f"output/routes_{month}"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            save_route_txt(route_full, total_distance, time_hours, output_dir, month)
 
-        avg_speed = ship_params['open_water_speed']
-        time_hours = total_distance / (avg_speed * 1.852)
-        print(f"  Время в пути: {time_hours:.1f} часов ({time_hours / 24:.1f} дней)")
+            print("\n📍 Создание интерактивной карты...")
+            map_file = output_dir / "route_map.html"
+            plot_route_on_map(
+                route=route_full,
+                start_port=points[0],
+                end_port=points[-1],
+                output_file=str(map_file),
+                land_mask=(land_mask | restriction_mask),
+                lats=lats,
+                lons=lons
+            )
+            print(f"✓ Карта создана (месяц '{month}')")
 
-        output_dir = Path(__file__).parent.parent / "output" / "routes"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        save_route_txt(route_full, total_distance, time_hours, output_dir)
+            print("\n📦 Экспорт маршрута...")
+            export_route_to_formats(route_full, output_dir)
+            print("✅ Маршрут для месяца сохранён!\n")
+        else:
+            print(f"\n✗ Маршрут для месяца {month} не найден — скорректируй ограничения/точки или расширь окно.\n")
 
-        print("\n📍 Создание интерактивной карты...")
-        map_file = output_dir / "route_map.html"
-        plot_route_on_map(
-            route=route_full,
-            start_port=true_start,
-            end_port=true_end,
-            output_file=str(map_file),
-            land_mask=(land_mask | restriction_mask),
-            lats=lats,
-            lons=lons
-        )
-        print(f"✓ Интерактивная карта создана: {map_file}")
-
-        print("\n📦 Экспорт маршрута...")
-        export_route_to_formats(route_full, output_dir)
-        print("✅ Маршрут сохранён в output/routes/")
-    else:
-        print("\n✗ Маршрут не найден — проверь координаты/окно или ограничения/запретные зоны.")
-
-def save_route_txt(route, distance, time, output_dir):
-    output_file = output_dir / "murmansk_archangelsk_sea_route.txt"
+def save_route_txt(route, distance, time, output_dir, month):
+    output_file = output_dir / f"route_{month}.txt"
     with open(output_file, 'w', encoding='utf-8') as f:
-        f.write("=== Оптимальный маршрут: Мурманск → Архангельск → на море ===\n\n")
+        f.write(f"=== Оптимальный маршрут ({month.upper()}): через индивидуальные порты ===\n\n")
         f.write(f"Длина: {distance:.2f} км\n")
         f.write(f"Время: {time:.1f} ч ({time / 24:.1f} дн)\n")
         f.write(f"Точек: {len(route)}\n\n")
